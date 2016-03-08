@@ -885,7 +885,7 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
             self.resizableImageView.layer.masksToBounds = true
             self.resizableImageView.addCornerRadiusAnimation(0, to: view.layer.cornerRadius, duration: duration)
         }
-        
+                let offset: CGFloat = UIApplication.sharedApplication().statusBarOrientation == .Portrait ? 20 : 0
         UIView.animateWithDuration(animationDuration, delay:0, usingSpringWithDamping:animationDamping, initialSpringVelocity:0, options:.CurveEaseInOut, animations: { () -> () in
                 self.backgroundView.alpha = 0.0
                 self.resizableImageView.layer.frame = self.senderViewOriginalFrame
@@ -1244,6 +1244,45 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
     
     public func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
         isEndAnimationByToolBar = true
+    }
+    
+    // MARK: - device rotation
+    @objc private func changeOrientation() {
+        initialPageIndex = -1 //makes sure we don't try to animate if the device has been rotated
+        //        setControlsHidden(true, animated: false, permanent: false)
+        // FIXME: - when we will to resolve this problem https://github.com/suzuki-0000/SKPhotoBrowser/issues/22  it will need to remove
+        deleteButtonShowFrame = CGRect(x: view.frame.width - 44, y: 5, width: 44, height: 44)
+        deleteButtonHideFrame = CGRect(x: view.frame.width - 44, y: -20, width: 44, height: 44)
+        
+        //        customCloseButtonShowFrame = customCloseButtonShowOldFrame
+        //        customCloseButtonHideFrame = customCloseButtonHideOldFrame
+        //        if displayCustomCloseButton == true {
+        //            if customCloseButtonShowFrame != nil && customCloseButtonHideFrame != nil {
+        //                if customCloseButtonConstraints == nil {
+        //                    switch startOrientation {
+        //                    case 1, 2:
+        //                        changeCustomPortraitFrameAfterRotation()
+        //                    case 3, 4:
+        //                        changeCustomLandscapeFrameAfterRotation()
+        //                    default: break
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        setControlsHidden(false, animated: false, permanent: false)
+    }
+    
+    // FIXME: - Maybe it will be needed in the future
+    private func changeCustomPortraitFrameAfterRotation() {
+        if UIApplication.sharedApplication().statusBarOrientation.isLandscape {
+            customCloseButtonShowFrame = CGRect(x: customCloseButtonShowOldFrame.origin.x * 2, y: customCloseButtonShowOldFrame.origin.y / 2 + customCloseButtonShowOldFrame.height / 4, width: customCloseButtonShowOldFrame.width, height: customCloseButtonShowOldFrame.height)
+            
+            customCloseButtonHideFrame = CGRect(x: customCloseButtonHideOldFrame.origin.x * 2, y: customCloseButtonHideOldFrame.origin.y / 2, width: customCloseButtonHideOldFrame.width, height: customCloseButtonHideOldFrame.height)
+        } else {
+            customCloseButtonShowFrame = CGRect(x: customCloseButtonShowOldFrame.origin.x, y: customCloseButtonShowOldFrame.origin.y, width: customCloseButtonShowOldFrame.width, height: customCloseButtonShowOldFrame.height)
+            
+            customCloseButtonHideFrame = CGRect(x: customCloseButtonHideOldFrame.origin.x, y: customCloseButtonHideOldFrame.origin.y, width: customCloseButtonHideOldFrame.width, height: customCloseButtonHideOldFrame.height)
+        }
     }
     
     override public func preferredStatusBarStyle() -> UIStatusBarStyle {
