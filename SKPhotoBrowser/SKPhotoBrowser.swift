@@ -772,9 +772,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
             let finalImageViewFrame:CGRect
 
             resizableImageView = UIImageView(image: imageFromView)
+            resizableImageView.contentMode = .ScaleAspectFill
             resizableImageView.frame = senderViewOriginalFrame
             resizableImageView.clipsToBounds = true
-            resizableImageView.contentMode = .ScaleAspectFill
             applicationWindow.addSubview(resizableImageView)
             
             if screenRatio < imageRatio {
