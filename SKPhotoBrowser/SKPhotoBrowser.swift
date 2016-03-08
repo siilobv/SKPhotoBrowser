@@ -157,9 +157,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
     private var currentPageIndex: Int = 0
     
     // senderView's property
-    private var senderViewForAnimation: UIView?
+    public var senderViewForAnimation: UIView?
     private var senderViewOriginalFrame: CGRect = CGRect.zero
-    private var senderOriginImage: UIImage!
+    public var senderOriginImage: UIImage!
     
     private var resizableImageView: UIImageView = UIImageView()
     
@@ -188,7 +188,8 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
     private let bundle = NSBundle(forClass: SKPhotoBrowser.self)
     
     // photos
-    var photos: [SKPhotoProtocol] = [SKPhotoProtocol]()
+    public var photos: [SKPhotoProtocol] = [SKPhotoProtocol]()
+    
     var numberOfPhotos: Int {
         return photos.count
     }
@@ -321,6 +322,7 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(SKPhotoBrowser.panGestureRecognized(_:)))
         panGesture.minimumNumberOfTouches = 1
         panGesture.maximumNumberOfTouches = 1
+        
         
         // transition (this must be last call of view did load.)
         performPresentAnimation()
