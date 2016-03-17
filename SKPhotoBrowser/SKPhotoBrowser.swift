@@ -152,6 +152,7 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
     // photo's paging
     private var visiblePages = [SKZoomingScrollView]()//: Set<SKZoomingScrollView> = Set()
     private var recycledPages = [SKZoomingScrollView]()
+    private(set) public var currentPageIndex: Int = 0
     
     private var initialPageIndex: Int = 0
     private var currentPageIndex: Int = 0
@@ -316,6 +317,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         
         // action button
         toolActionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(SKPhotoBrowser.actionButtonPressed))
+//        toolActionButton.tintColor = .whiteColor()
+        
+        toolActionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "editPictureButtonTapped")
         toolActionButton.tintColor = .whiteColor()
         
         // gesture
@@ -328,8 +332,19 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         performPresentAnimation()
     }
     
+    public func editPictureButtonTapped() {
+        
+    }
+    
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        
+        //we use this to prevent this create views again if we're coming back
+        //from a presented view controller
+        if let _ = presentedViewController {
+            return
+        }
+        
         reloadData()
         
         var i = 0
@@ -369,6 +384,10 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
     public override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         isViewActive = true
+    public override func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
+    }
+    
+        return .Slide
     }
     
     public override func prefersStatusBarHidden() -> Bool {
@@ -720,6 +739,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
             senderViewForAnimation?.hidden = (currentPageIndex == initialPageIndex)
             
             isDraggingPhoto = true
+            
+            navigationController?.setNavigationBarHidden(true, animated: true)
+
             setNeedsStatusBarAppearanceUpdate()
         }
         
@@ -1135,6 +1157,8 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
             },
             completion: { (Bool) -> Void in
         })
+        
+        navigationController?.setNavigationBarHidden(hidden, animated: animated)
         
         if !permanent {
             hideControlsAfterDelay()
