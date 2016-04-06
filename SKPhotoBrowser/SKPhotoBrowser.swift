@@ -268,10 +268,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         
         // toolbar
         toolBar = UIToolbar(frame: frameForToolbarAtOrientation())
-        toolBar.backgroundColor = UIColor.clearColor()
+        toolBar.barTintColor = UIColor.blackColor()
         toolBar.clipsToBounds = true
         toolBar.translucent = true
-        toolBar.setBackgroundImage(UIImage(), forToolbarPosition: .Any, barMetrics: .Default)
         view.addSubview(toolBar)
         
         if !displayToolbar {
@@ -319,7 +318,6 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         toolActionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(SKPhotoBrowser.actionButtonPressed))
 //        toolActionButton.tintColor = .whiteColor()
         
-        toolActionButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "editPictureButtonTapped")
         toolActionButton.tintColor = .whiteColor()
         
         // gesture
@@ -432,7 +430,9 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
             } else {
                 closeButton.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
             }
-            closeButton.backgroundColor = .clearColor()
+            closeButton.backgroundColor = .blackColor()
+            closeButton.clipsToBounds = true
+            closeButton.layer.cornerRadius = 22
             closeButton.addTarget(self, action: #selector(self.closeButtonPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             closeButtonHideFrame = CGRect(x: 5, y: -20, width: 44, height: 44)
             closeButtonShowFrame = CGRect(x: 5, y: buttonTopOffset, width: 44, height: 44)
@@ -571,6 +571,14 @@ public class SKPhotoBrowser: UIViewController, UIScrollViewDelegate {
         // for tool bar
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil)
         var items = [UIBarButtonItem]()
+        
+        let fakeButton = UIBarButtonItem(title: NSLocalizedString("default.edit", comment: ""), style: .Plain, target: nil, action: nil)
+        
+//        fakeButton.possibleTitles = Set(arrayLiteral: NSLocalizedString("default.edit", comment: ""))
+        fakeButton.enabled = false
+        fakeButton.tintColor = .clearColor()
+        items.append(fakeButton)
+        
         items.append(flexSpace)
         if numberOfPhotos > 1 && displayBackAndForwardButton {
             items.append(toolPreviousButton)
